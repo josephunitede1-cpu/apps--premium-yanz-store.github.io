@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ STORE • Admin (Aman)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #111;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: #fff;
+        }
+        /* Halaman Login */
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            padding: 40px 32px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .login-container .sub {
+            color: #aaa;
+            margin-bottom: 32px;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            text-align: left;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 32px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .login-container input:focus {
+            border-color: #888;
+            outline: none;
+        }
+        .btn {
+            background: #fff;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn:hover {
+            background: #ddd;
+        }
+        .error {
+            color: #ff6666;
+            margin-top: 16px;
+        }
+        /* Panel Admin (awalnya disembunyikan) */
+        .admin-container {
+            display: none;
+            max-width: 1000px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            padding: 32px;
+            border: 1px solid #333;
+        }
+        .admin-container h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+        .sub {
+            color: #aaa;
+            margin-bottom: 32px;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+        }
+        .flex-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #2a2a2a;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #444;
+            flex: 1 1 300px;
+        }
+        .card h3 {
+            color: #fff;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #888;
+            outline: none;
+        }
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            border: 1px solid #666;
+        }
+        .btn-danger {
+            background: #662222;
+            color: #fff;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            width: auto;
+        }
+        .category-list {
+            margin-top: 20px;
+        }
+        .category-item {
+            background: #333;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .product-table th {
+            text-align: left;
+            color: #aaa;
+            font-weight: 400;
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+        }
+        .product-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .product-table input {
+            background: #2a2a2a;
+            border: 1px solid #555;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 20px;
+            width: 100px;
+        }
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .empty-msg {
+            color: #777;
+            font-style: italic;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .footer-note {
+            color: #777;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85rem;
+        }
+        hr {
+            border: 1px solid #333;
+            margin: 30px 0;
+        }
+        .logout-btn {
+            background: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        .logout-btn:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Halaman Login -->
+    <div id="loginPage" class="login-container">
+        <h2>✦ YANZ ADMIN ✦</h2>
+        <div class="sub">Masukkan password untuk mengakses panel</div>
+        <input type="password" id="passwordInput" placeholder="Password" autofocus>
+        <button class="btn" id="loginBtn">Masuk</button>
+        <div id="loginError" class="error"></div>
+        <div style="color:#555; margin-top:20px;">Gunakan password <strong></strong></div>
+    </div>
+
+    <!-- Panel Admin (disembunyikan) -->
+    <div id="adminPage" class="admin-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>✦ YANZ STORE ADMIN ✦</h1>
+            <button class="logout-btn" id="logoutBtn">🚪 Keluar</button>
+        </div>
+        <div class="sub">Kelola kategori dan produk (tersimpan di localStorage)</div>
+
+        <!-- Form tambah kategori & produk -->
+        <div class="flex-row">
+            <div class="card">
+                <h3>➕ Tambah Kategori</h3>
+                <div class="input-group">
+                    <label>Nama Kategori Baru</label>
+                    <input type="text" id="newCategoryName" placeholder="Contoh: Netflix">
+                </div>
+                <button class="btn" id="addCategoryBtn">Tambah Kategori</button>
+            </div>
+            <div class="card">
+                <h3>➕ Tambah Produk</h3>
+                <div class="input-group">
+                    <label>Pilih Kategori</label>
+                    <select id="productCategorySelect"></select>
+                </div>
+                <div class="input-group">
+                    <label>Nama Produk</label>
+                    <input type="text" id="newProductName" placeholder="Contoh: 1 bulan premium">
+                </div>
+                <div class="input-group">
+                    <label>Harga (Rp)</label>
+                    <input type="number" id="newProductPrice" placeholder="10000">
+                </div>
+                <button class="btn" id="addProductBtn">Tambah Produk</button>
+            </div>
+            <div class="card">
+                <h3>⚙️ Pengaturan</h3>
+                <button class="btn btn-secondary" id="resetDefaultBtn" style="margin-right: 10px;">↻ Reset ke Default</button>
+                <button class="btn btn-secondary" id="clearAllBtn">🗑 Hapus Semua</button>
+                <p style="color:#aaa; margin-top: 16px;">Perubahan otomatis tersimpan di localStorage.</p>
+            </div>
+        </div>
+
+        <!-- Daftar Kategori & Produk -->
+        <h2 style="margin: 30px 0 20px;">📋 Daftar Kategori & Produk</h2>
+        <div id="categoryListContainer" class="category-list"></div>
+
+        <hr>
+        <div class="footer-note">
+            <span>Data tersimpan di browser (localStorage) — hanya admin yang dapat mengakses.</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== KONFIGURASI PASSWORD ====================
+        const ADMIN_PASSWORD = 'adminyanz123';  // Ganti sesuai keinginan
+
+        // ==================== DATA DEFAULT ====================
+        const DEFAULT_PRODUCTS = {
+            "ChatGPT Plus": [
+                { name: "sharing 1 bulan 7u", price: 4000 },
+                { name: "private 1 bulan nogar", price: 7000 },
+                { name: "private 1 bulan fullgar", price: 13000 }
+            ],
+            "ChatGPT Business": [
+                { name: "private 1 bulan via invite", price: 5000 },
+                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000 }
+            ],
+            "Capcut Pro": [
+                { name: "private 7 hari", price: 800 },
+                { name: "private 28 hari", price: 5000 },
+                { name: "private 35 hari", price: 5500 },
+                { name: "private 42 hari", price: 6000 }
+            ],
+            "Alight Motion": [
+                { name: "1 tahun akun buyer", price: 350 },
+                { name: "priv 1 tahun generator", price: 100 },
+                { name: "bulk 100 akun generator", price: 1000 }
+            ],
+            "Canva": [
+                { name: "member 1 bulan", price: 100 },
+                { name: "design 1 bulan", price: 200 },
+                { name: "education lifetime gar 6b", price: 600 },
+                { name: "canva head 1 bulan", price: 3000 }
+            ],
+            "Gemini Pro": [
+                { name: "sharing 1 bulan", price: 1000 },
+                { name: "priv akun buyer 1 bulan", price: 2000 }
+            ],
+            "Apple Music": [
+                { name: "famplan 1 bulan via invite", price: 1000 },
+                { name: "head 1 bulan", price: 6500 },
+                { name: "indplan 1 bulan", price: 6500 }
+            ],
+            "Loklok": [
+                { name: "standar no login tv 1 bulan", price: 20000 }
+            ],
+            "Viu Anlim / Plus": [
+                { name: "private 1 tahun (1 paket)", price: 100 },
+                { name: "private lifetime (1 paket)", price: 300 }
+            ],
+            "Vidioo": [
+                { name: "private only tv 1 tahun", price: 2500 },
+                { name: "private mobile 1 bulan", price: 19500 }
+            ],
+            "Youtube": [
+                { name: "famplan 1 bulan", price: 900 },
+                { name: "jaspay youtube (sebutkan plan)", price: 1500 },
+                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900 }
+            ],
+            "Get Contact": [
+                { name: "1 bulan nomor buyer (otp fast)", price: 7000 },
+                { name: "cek nomor gtc", price: 50 }
+            ]
+        };
+
+        const STORAGE_KEY = 'yanz_products';
+        const LOGIN_SESSION_KEY = 'yanz_admin_logged_in';
+
+        // ==================== CEK SESSION LOGIN ====================
+        function isLoggedIn() {
+            return sessionStorage.getItem(LOGIN_SESSION_KEY) === 'true';
+        }
+
+        // ==================== TAMPILKAN HALAMAN SESUAI STATUS ====================
+        function showCorrectPage() {
+            if (isLoggedIn()) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminPage').style.display = 'block';
+                initAdmin();
+            } else {
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('adminPage').style.display = 'none';
+            }
+        }
+
+        // ==================== LOGIN ====================
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const pwd = document.getElementById('passwordInput').value;
+            if (pwd === ADMIN_PASSWORD) {
+                sessionStorage.setItem(LOGIN_SESSION_KEY, 'true');
+                showCorrectPage();
+            } else {
+                document.getElementById('loginError').innerText = 'Password salah!';
+            }
+        });
+
+        // ==================== LOGOUT ====================
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem(LOGIN_SESSION_KEY);
+            showCorrectPage();
+            document.getElementById('passwordInput').value = '';
+        });
+
+        // ==================== FUNGSI ADMIN (sama seperti sebelumnya) ====================
+        function loadProducts() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+                }
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+        }
+
+        function renderCategories() {
+            const products = loadProducts();
+            const container = document.getElementById('categoryListContainer');
+            container.innerHTML = '';
+
+            const categories = Object.keys(products).sort();
+
+            if (categories.length === 0) {
+                container.innerHTML = '<div class="empty-msg">Belum ada kategori. Silakan tambah kategori baru.</div>';
+                return;
+            }
+
+            categories.forEach(cat => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'category-item';
+                catDiv.dataset.category = cat;
+
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <span class="category-title">${cat}</span>
+                    <div class="action-btns">
+                        <button class="btn btn-secondary btn-sm edit-cat-btn" data-category="${cat}">✏️ Edit Nama</button>
+                        <button class="btn btn-danger btn-sm delete-cat-btn" data-category="${cat}">🗑 Hapus</button>
+                    </div>
+                `;
+                catDiv.appendChild(header);
+
+                const productList = products[cat] || [];
+                if (productList.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-msg';
+                    empty.textContent = 'Tidak ada produk di kategori ini.';
+                    catDiv.appendChild(empty);
+                } else {
+                    const table = document.createElement('table');
+                    table.className = 'product-table';
+                    table.innerHTML = `
+                        <thead>
+                            <tr><th>Nama Produk</th><th>Harga (Rp)</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tbody-${cat.replace(/\s/g, '_')}"></tbody>
+                    `;
+                    const tbody = table.querySelector('tbody');
+                    productList.forEach((prod, idx) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><input type="text" class="product-name-input" data-category="${cat}" data-index="${idx}" value="${prod.name.replace(/"/g, '&quot;')}"></td>
+                            <td><input type="number" class="product-price-input" data-category="${cat}" data-index="${idx}" value="${prod.price}"></td>
+                            <td><button class="btn btn-danger btn-sm delete-prod-btn" data-category="${cat}" data-index="${idx}">Hapus</button></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    catDiv.appendChild(table);
+                }
+
+                container.appendChild(catDiv);
+            });
+
+            attachEvents();
+        }
+
+        function attachEvents() {
+            document.querySelectorAll('.delete-cat-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const cat = e.target.dataset.category;
+                    if (confirm(`Hapus kategori "${cat}" dan semua produk di dalamnya?`)) {
+                        const products = loadProducts();
+                        delete products[cat];
+                        saveProducts(products);
+                        renderCategories();
+                        populateCategorySelect();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.edit-cat-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const oldCat = e.target.dataset.category;
+                    const newCat = prompt('Masukkan nama kategori baru:', oldCat);
+                    if (newCat && newCat.trim() !== '' && newCat !== oldCat) {
+                        const products = loadProducts();
+                        if (products[newCat]) {
+                            alert('Nama kategori sudah ada!');
+                            return;
+                        }
+                        products[newCat] = products[oldCat];
+                        delete products[oldCat];
+                        saveProducts(products);
+                        renderCategories();
+                        populateCategorySelect();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-prod-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const cat = e.target.dataset.category;
+                    const idx = parseInt(e.target.dataset.index, 10);
+                    if (confirm('Hapus produk ini?')) {
+                        const products = loadProducts();
+                        products[cat].splice(idx, 1);
+                        saveProducts(products);
+                        renderCategories();
+                        populateCategorySelect();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.product-name-input, .product-price-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const cat = e.target.dataset.category;
+                    const idx = parseInt(e.target.dataset.index, 10);
+                    const products = loadProducts();
+                    if (e.target.classList.contains('product-name-input')) {
+                        products[cat][idx].name = e.target.value;
+                    } else {
+                        products[cat][idx].price = parseInt(e.target.value, 10) || 0;
+                    }
+                    saveProducts(products);
+                });
+            });
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('productCategorySelect');
+            const products = loadProducts();
+            const categories = Object.keys(products).sort();
+            select.innerHTML = '';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+        }
+
+        function initAdmin() {
+            // Pastikan data default ada jika localStorage kosong
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                saveProducts(DEFAULT_PRODUCTS);
+            }
+            renderCategories();
+            populateCategorySelect();
+
+            // Event listener tombol2 admin
+            document.getElementById('addCategoryBtn').onclick = () => {
+                const newCat = document.getElementById('newCategoryName').value.trim();
+                if (!newCat) {
+                    alert('Nama kategori tidak boleh kosong');
+                    return;
+                }
+                const products = loadProducts();
+                if (products[newCat]) {
+                    alert('Kategori sudah ada!');
+                    return;
+                }
+                products[newCat] = [];
+                saveProducts(products);
+                document.getElementById('newCategoryName').value = '';
+                renderCategories();
+                populateCategorySelect();
+            };
+
+            document.getElementById('addProductBtn').onclick = () => {
+                const cat = document.getElementById('productCategorySelect').value;
+                if (!cat) {
+                    alert('Pilih kategori terlebih dahulu');
+                    return;
+                }
+                const name = document.getElementById('newProductName').value.trim();
+                const price = parseInt(document.getElementById('newProductPrice').value, 10);
+                if (!name) {
+                    alert('Nama produk harus diisi');
+                    return;
+                }
+                if (isNaN(price) || price < 0) {
+                    alert('Harga harus angka positif');
+                    return;
+                }
+                const products = loadProducts();
+                products[cat].push({ name, price });
+                saveProducts(products);
+                document.getElementById('newProductName').value = '';
+                document.getElementById('newProductPrice').value = '';
+                renderCategories();
+                populateCategorySelect();
+            };
+
+            document.getElementById('resetDefaultBtn').onclick = () => {
+                if (confirm('Reset ke data default? Semua perubahan akan hilang.')) {
+                    saveProducts(DEFAULT_PRODUCTS);
+                    renderCategories();
+                    populateCategorySelect();
+                }
+            };
+
+            document.getElementById('clearAllBtn').onclick = () => {
+                if (confirm('Hapus SEMUA kategori dan produk?')) {
+                    saveProducts({});
+                    renderCategories();
+                    populateCategorySelect();
+                }
+            };
+        }
+
+        // ==================== JALANKAN ====================
+        showCorrectPage();
+        // Jika login, maka initAdmin sudah dipanggil di showCorrectPage via initAdmin()
+        // Tapi karena initAdmin dipanggil sebelum event listener terpasang? Kita panggil di dalam showCorrectPage
+        // Kita perlu sedikit modifikasi showCorrectPage:
+        // Tapi di atas showCorrectPage memanggil initAdmin() tanpa definisi di scope? 
+        // Kita sudah definisikan initAdmin, jadi aman.
+
+        // Perbaiki showCorrectPage
+        window.showCorrectPage = function() {
+            if (isLoggedIn()) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminPage').style.display = 'block';
+                initAdmin();
+            } else {
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('adminPage').style.display = 'none';
+            }
+        };
+
+        // Redefine showCorrectPage (overwrite) agar menggunakan yang baru
+        showCorrectPage = function() {
+            if (isLoggedIn()) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminPage').style.display = 'block';
+                initAdmin();
+            } else {
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('adminPage').style.display = 'none';
+            }
+        };
+
+        showCorrectPage();
+    </script>
+</body>
+</html>
