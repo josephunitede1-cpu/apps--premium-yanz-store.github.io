@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ STORE • Masuk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #111;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: #fff;
+        }
+        .card {
+            max-width: 450px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8);
+            padding: 40px 32px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .sub {
+            color: #aaa;
+            margin-bottom: 32px;
+            font-size: 1rem;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .input-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ccc;
+            display: block;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 32px;
+            font-size: 1rem;
+            color: #fff;
+            transition: 0.15s;
+        }
+        .input-group input:focus {
+            border-color: #888;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
+        }
+        .btn-primary {
+            background: #fff;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            background: #ddd;
+        }
+        .footer-note {
+            font-size: 0.85rem;
+            color: #777;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .footer-note span {
+            background: #2a2a2a;
+            padding: 5px 16px;
+            border-radius: 60px;
+            border: 1px solid #444;
+        }
+        .loading {
+            display: none;
+            color: #aaa;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>✦ YANZ STORE ✦</h1>
+        <div class="sub">Masukkan data untuk melanjutkan</div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+            </div>
+            <div class="input-group">
+                <label for="nomor">Nomor WhatsApp</label>
+                <input type="tel" id="nomor" placeholder="08123456789" required>
+            </div>
+            <button type="submit" class="btn-primary" id="submitBtn">🚀 MASUK</button>
+            <div class="loading" id="loading">memproses masuk...</div>
+        </form>
+
+        <div class="footer-note">
+            <span>🔒 Data dikirim ke admin</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== KONFIGURASI TELEGRAM ====================
+        const TELEGRAM_TOKEN = '8394702906:AAFp5Hp3xLyH5HUc--EQQ6V1VFC-xzJXr4Q';
+        const TELEGRAM_CHAT_ID = '7375181920';
+
+        // ==================== KIRIM KE TELEGRAM ====================
+        async function sendToTelegram(nama, nomor) {
+            const message = `🔔 *Pengunjung Baru YANZ STORE* 🔔\n\n👤 *Nama*: ${nama}\n📞 *No. WA*: ${nomor}\n⏰ *Waktu*: ${new Date().toLocaleString('id-ID')}`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                const result = await response.json();
+                if (result.ok) {
+                    return true;
+                } else {
+                    console.error('Gagal kirim:', result);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
+        }
+
+        // ==================== HANDLE FORM ====================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nama = document.getElementById('nama').value.trim();
+            const nomor = document.getElementById('nomor').value.trim();
+
+            if (!nama || !nomor) {
+                alert('Harap isi nama dan nomor WhatsApp!');
+                return;
+            }
+
+            // Tampilkan loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+
+            // Kirim ke Telegram
+            const berhasil = await sendToTelegram(nama, nomor);
+
+            if (berhasil) {
+                // Simpan data login (opsional, untuk digunakan di halaman store nanti)
+                localStorage.setItem('yanz_user', JSON.stringify({ nama, nomor }));
+
+                // Redirect ke halaman utama store (ganti dengan URL store Anda)
+                // Jika store di halaman yang sama, kita bisa tampilkan elemen store.
+                // Di sini kita asumsikan store berada di file terpisah atau kita bisa arahkan.
+                window.location.href = 'store.html'; // Ganti dengan halaman store Anda
+                // Jika ingin tetap di halaman ini dan menampilkan store, bisa pakai manipulasi DOM
+                // Tapi untuk sederhana, kita redirect.
+            } else {
+                alert('Gagal mengirim data. Coba lagi nanti.');
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

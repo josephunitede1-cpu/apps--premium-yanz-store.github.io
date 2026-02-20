@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ STORE • Belanja</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #111;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: #fff;
+        }
+        /* Halaman Login */
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            padding: 40px 32px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .login-container h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .login-container .sub {
+            color: #aaa;
+            margin-bottom: 32px;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .input-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ccc;
+            display: block;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 32px;
+            font-size: 1rem;
+            color: #fff;
+            transition: 0.15s;
+        }
+        .input-group input:focus {
+            border-color: #888;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
+        }
+        .btn-primary {
+            background: #fff;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            background: #ddd;
+        }
+        .footer-note {
+            font-size: 0.85rem;
+            color: #777;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .footer-note span {
+            background: #2a2a2a;
+            padding: 5px 16px;
+            border-radius: 60px;
+            border: 1px solid #444;
+        }
+        .loading {
+            display: none;
+            color: #aaa;
+            margin-top: 16px;
+        }
+        /* Halaman Store (awalnya disembunyikan) */
+        .store-container {
+            display: none;
+            max-width: 700px;
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 48px;
+            padding: 32px 28px;
+            border: 1px solid #333;
+        }
+        .store-container h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        .subhead {
+            color: #aaa;
+            margin-bottom: 32px;
+            font-weight: 400;
+            font-size: 0.95rem;
+            border-left: 4px solid #888;
+            padding-left: 16px;
+            background: #2a2a2a;
+            border-radius: 0 16px 16px 0;
+            line-height: 1.4;
+        }
+        .selector-group {
+            margin-bottom: 24px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ccc;
+            display: block;
+            margin-bottom: 6px;
+            margin-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 32px;
+            font-size: 1rem;
+            color: #fff;
+            transition: 0.15s;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 18px;
+        }
+        select:focus {
+            border-color: #888;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
+        }
+        select option {
+            background: #1e1e1e;
+            color: #fff;
+        }
+        .info-panel {
+            background: #2a2a2a;
+            border-radius: 32px;
+            padding: 24px;
+            margin: 28px 0 24px;
+            border: 1px solid #444;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #444;
+        }
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #ccc;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .info-value {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #fff;
+        }
+        .total-row .info-value {
+            color: #fff;
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+        .btn-payment {
+            background: #333;
+            color: #fff;
+            border: 2px solid #888;
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin: 20px 0 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-payment:hover {
+            background: #3e3e3e;
+            border-color: #aaa;
+        }
+        .payment-details {
+            display: none;
+            margin-top: 24px;
+        }
+        .qris-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #2a2a2a;
+            border-radius: 36px;
+            padding: 20px;
+            border: 2px dashed #666;
+            margin-bottom: 20px;
+        }
+        .qris-image {
+            max-width: 220px;
+            width: 100%;
+            border-radius: 28px;
+            box-shadow: 0 15px 30px -5px black;
+            transition: 0.2s;
+            border: 3px solid #888;
+        }
+        .qris-placeholder {
+            background: #333;
+            width: 100%;
+            text-align: center;
+            padding: 28px 12px;
+            border-radius: 28px;
+            color: #aaa;
+            font-weight: 500;
+        }
+        .ewallet-item {
+            background: #2a2a2a;
+            border-radius: 28px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #444;
+        }
+        .ewallet-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .ewallet-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ewallet-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .copy-btn {
+            background: #333;
+            border: 1px solid #888;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .copy-btn:hover {
+            background: #444;
+        }
+        .btn-order {
+            background: #fff;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 20px 24px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 20px 30px -8px rgba(255,255,255,0.2);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-order:hover {
+            background: #ddd;
+        }
+        .whatsapp-icon {
+            font-size: 1.6rem;
+        }
+        .testimoni-link {
+            margin: 20px 0 10px;
+            text-align: center;
+        }
+        .testimoni-link a {
+            color: #fff;
+            background: #333;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #666;
+            display: inline-block;
+        }
+        .testimoni-link a:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Halaman Login -->
+    <div id="loginPage" class="login-container">
+        <h1>✦ YANZ STORE ✦</h1>
+        <div class="sub">Masukkan data untuk melanjutkan</div>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+            </div>
+            <div class="input-group">
+                <label for="nomor">Nomor WhatsApp</label>
+                <input type="tel" id="nomor" placeholder="08123456789" required>
+            </div>
+            <button type="submit" class="btn-primary" id="submitBtn">🚀 MASUK KE STORE</button>
+            <div class="loading" id="loading">Mengirim data...</div>
+        </form>
+        <div class="footer-note">
+            <span>🔒 Data dikirim via Telegram</span>
+        </div>
+    </div>
+
+    <!-- Halaman Store (awalnya disembunyikan) -->
+    <div id="storePage" class="store-container">
+        <h1>✦ YANZ STORE • BELANJA ✦</h1>
+        <div class="subhead">Produk selalu update dari admin — admin flat Rp 200</div>
+
+        <!-- KATEGORI -->
+        <div class="selector-group">
+            <label for="categorySelect">📂 Pilih kategori</label>
+            <select id="categorySelect"></select>
+        </div>
+
+        <!-- PRODUK -->
+        <div class="selector-group">
+            <label for="productSelect">🎁 Pilih paket / produk</label>
+            <select id="productSelect"></select>
+        </div>
+
+        <!-- INFO HARGA + ADMIN FLAT 200 -->
+        <div class="info-panel">
+            <div class="info-row">
+                <span class="info-label">💰 Harga dasar</span>
+                <span class="info-value" id="basePriceDisplay">Rp 0</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🧾 Biaya admin (flat)</span>
+                <span class="info-value" id="adminFeeDisplay">Rp 200</span>
+            </div>
+            <div class="info-row total-row">
+                <span class="info-label">💵 TOTAL</span>
+                <span class="info-value" id="totalPriceDisplay">Rp 0</span>
+            </div>
+        </div>
+
+        <!-- TOMBOL BAYAR (munculkan QRIS & e-wallet) -->
+        <button class="btn-payment" id="payBtn">
+            <span>💳</span> 𝗕𝗮𝘆𝗮𝗿 
+        </button>
+
+        <!-- DETAIL PEMBAYARAN -->
+        <div class="payment-details" id="paymentDetails">
+            <div class="qris-area">
+                <img src="qris.jpg" alt="QRIS YANZ STORE" class="qris-image" id="qrisImage" style="display: none;">
+                <div class="qris-placeholder" id="qrisPlaceholder">📸 Scan QRIS di atas</div>
+                <div style="font-size: 0.8rem; margin-top: 12px; color: #aaa;">QRIS (semua metode)</div>
+            </div>
+            <!-- DANA -->
+            <div class="ewallet-item">
+                <div class="ewallet-info">
+                    <span class="ewallet-label">DANA</span>
+                    <span class="ewallet-number" id="danaNumber">0852 8338 0274</span>
+                </div>
+                <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+            </div>
+            <!-- GoPay -->
+            <div class="ewallet-item">
+                <div class="ewallet-info">
+                    <span class="ewallet-label">GoPay</span>
+                    <span class="ewallet-number" id="gopayNumber">0852 8338 0274</span>
+                </div>
+                <button class="copy-btn" data-copy="085283380274">📋 Salin</button>
+            </div>
+        </div>
+
+        <!-- LINK CHANNEL WHATSAPP TESTIMONI (ganti dengan link asli) -->
+        <div class="testimoni-link">
+            <a href="https://whatsapp.com/channel/0029Vb6V4peBPzjTW6CQcV1h" target="_blank">📢 Channel WhatsApp Testimoni</a>
+        </div>
+
+        <!-- TOMBOL KONFIRMASI VIA WA -->
+        <button class="btn-order" id="orderBtn">
+            <span class="whatsapp-icon">📲</span> 𝗖𝗼𝗻𝗳𝗶𝗿𝗺 𝘃𝗶𝗮 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽
+        </button>
+
+        <div class="footer-note">
+            <span>✨ admin flat Rp 200 • hubungi admin jika perlu ✨</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== KONFIGURASI TELEGRAM ====================
+        const TELEGRAM_TOKEN = '8394702906:AAFp5Hp3xLyH5HUc--EQQ6V1VFC-xzJXr4Q';
+        const TELEGRAM_CHAT_ID = '7375181920';
+
+        // ==================== KONSTANTA ====================
+        const FLAT_ADMIN = 200;
+        const DANA_NUMBER = '085283380274';
+        const GOPAY_NUMBER = '085283380274';
+        const ADMIN_PHONE = '6285283380274'; // Nomor admin untuk WA
+
+        // Key localStorage
+        const PRODUCTS_STORAGE_KEY = 'yanz_products';
+        const USER_STORAGE_KEY = 'yanz_user';
+
+        // ==================== DATA DEFAULT (JIKA localStorage KOSONG) ====================
+        const DEFAULT_PRODUCTS = {
+            "ChatGPT Plus": [
+                { name: "sharing 1 bulan 7u", price: 4000 },
+                { name: "private 1 bulan nogar", price: 7000 },
+                { name: "private 1 bulan fullgar", price: 13000 }
+            ],
+            "ChatGPT Business": [
+                { name: "private 1 bulan via invite", price: 5000 },
+                { name: "head 1 bulan fullgar (bisa invite 4 email)", price: 14000 }
+            ],
+            "Capcut Pro": [
+                { name: "private 7 hari", price: 800 },
+                { name: "private 28 hari", price: 5000 },
+                { name: "private 35 hari", price: 5500 },
+                { name: "private 42 hari", price: 6000 }
+            ],
+            "Alight Motion": [
+                { name: "1 tahun akun buyer", price: 350 },
+                { name: "priv 1 tahun generator", price: 100 },
+                { name: "bulk 100 akun generator", price: 1000 }
+            ],
+            "Canva": [
+                { name: "member 1 bulan", price: 100 },
+                { name: "design 1 bulan", price: 200 },
+                { name: "education lifetime gar 6b", price: 600 },
+                { name: "canva head 1 bulan", price: 3000 }
+            ],
+            "Gemini Pro": [
+                { name: "sharing 1 bulan", price: 1000 },
+                { name: "priv akun buyer 1 bulan", price: 2000 }
+            ],
+            "Apple Music": [
+                { name: "famplan 1 bulan via invite", price: 1000 },
+                { name: "head 1 bulan", price: 6500 },
+                { name: "indplan 1 bulan", price: 6500 }
+            ],
+            "Loklok": [
+                { name: "standar no login tv 1 bulan", price: 20000 }
+            ],
+            "Viu Anlim / Plus": [
+                { name: "private 1 tahun (1 paket)", price: 100 },
+                { name: "private lifetime (1 paket)", price: 300 }
+            ],
+            "Vidioo": [
+                { name: "private only tv 1 tahun", price: 2500 },
+                { name: "private mobile 1 bulan", price: 19500 }
+            ],
+            "Youtube": [
+                { name: "famplan 1 bulan", price: 900 },
+                { name: "jaspay youtube (sebutkan plan)", price: 1500 },
+                { name: "jaspay jasver youtube (sebutkan plan)", price: 1900 }
+            ],
+            "Get Contact": [
+                { name: "1 bulan nomor buyer (otp fast)", price: 7000 },
+                { name: "cek nomor gtc", price: 50 }
+            ]
+        };
+
+        // ==================== ELEMEN ====================
+        const loginPage = document.getElementById('loginPage');
+        const storePage = document.getElementById('storePage');
+        const loginForm = document.getElementById('loginForm');
+        const loadingEl = document.getElementById('loading');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Elemen store
+        const categorySelect = document.getElementById('categorySelect');
+        const productSelect = document.getElementById('productSelect');
+        const basePriceSpan = document.getElementById('basePriceDisplay');
+        const adminFeeSpan = document.getElementById('adminFeeDisplay');
+        const totalPriceSpan = document.getElementById('totalPriceDisplay');
+        const qrisImage = document.getElementById('qrisImage');
+        const qrisPlaceholder = document.getElementById('qrisPlaceholder');
+        const orderBtn = document.getElementById('orderBtn');
+        const payBtn = document.getElementById('payBtn');
+        const paymentDetails = document.getElementById('paymentDetails');
+
+        // ==================== FUNGSI BANTU ====================
+        function loadProducts() {
+            const stored = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+                }
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+        }
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
+
+        // ==================== KIRIM KE TELEGRAM ====================
+        async function sendToTelegram(nama, nomor) {
+            const message = `🔔 *Pengunjung Baru YANZ STORE* 🔔\n\n👤 *Nama*: ${nama}\n📞 *No. WA*: ${nomor}\n⏰ *Waktu*: ${new Date().toLocaleString('id-ID')}`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                return true;
+            } catch (error) {
+                console.error('Gagal kirim ke Telegram:', error);
+                return false;
+            }
+        }
+
+        // ==================== HANDLE LOGIN ====================
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nama = document.getElementById('nama').value.trim();
+            const nomor = document.getElementById('nomor').value.trim();
+            if (!nama || !nomor) {
+                alert('Harap isi nama dan nomor WhatsApp!');
+                return;
+            }
+            loadingEl.style.display = 'block';
+            submitBtn.disabled = true;
+
+            // Kirim ke Telegram
+            await sendToTelegram(nama, nomor);
+
+            // Simpan user
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ nama, nomor }));
+
+            // Tampilkan store
+            loginPage.style.display = 'none';
+            storePage.style.display = 'block';
+            initStore();
+        });
+
+        // ==================== CEK LOGIN SEBELUMNYA ====================
+        function checkLogin() {
+            const userData = localStorage.getItem(USER_STORAGE_KEY);
+            if (userData) {
+                loginPage.style.display = 'none';
+                storePage.style.display = 'block';
+                initStore();
+            } else {
+                loginPage.style.display = 'block';
+                storePage.style.display = 'none';
+            }
+        }
+
+        // ==================== FUNGSI STORE ====================
+        function initStore() {
+            // Set nomor e-wallet
+            document.getElementById('danaNumber').innerText = DANA_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+            document.getElementById('gopayNumber').innerText = GOPAY_NUMBER.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+            document.querySelectorAll('.copy-btn')[0]?.setAttribute('data-copy', DANA_NUMBER);
+            document.querySelectorAll('.copy-btn')[1]?.setAttribute('data-copy', GOPAY_NUMBER);
+
+            // QRIS fallback
+            qrisImage.onerror = function() {
+                qrisImage.style.display = 'none';
+                qrisPlaceholder.style.display = 'block';
+                qrisPlaceholder.textContent = '📸 QRIS tidak ditemukan, tapi bisa via DANA/GoPay.';
+            };
+
+            // Muat produk dari localStorage
+            populateCategories();
+            if (categorySelect.options.length > 0) {
+                categorySelect.selectedIndex = 0;
+                onCategoryChange();
+            }
+
+            // Event listeners
+            categorySelect.addEventListener('change', onCategoryChange);
+            productSelect.addEventListener('change', updateDisplay);
+            orderBtn.addEventListener('click', orderViaWA);
+            payBtn.addEventListener('click', togglePaymentDetails);
+            setupCopyButtons();
+        }
+
+        function populateCategories() {
+            const products = loadProducts();
+            const categories = Object.keys(products).sort();
+            categorySelect.innerHTML = '';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function populateProducts(category) {
+            const products = loadProducts();
+            const productList = products[category] || [];
+            productSelect.innerHTML = '';
+            productList.forEach((prod, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${prod.name} — ${formatRupiah(prod.price)}`;
+                option.dataset.price = prod.price;
+                option.dataset.name = prod.name;
+                productSelect.appendChild(option);
+            });
+        }
+
+        function updateDisplay() {
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            if (!selectedOption || productSelect.options.length === 0) {
+                basePriceSpan.textContent = formatRupiah(0);
+                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+                return;
+            }
+            const basePrice = parseInt(selectedOption.dataset.price, 10);
+            const total = basePrice + FLAT_ADMIN;
+            basePriceSpan.textContent = formatRupiah(basePrice);
+            adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+            totalPriceSpan.textContent = formatRupiah(total);
+        }
+
+        function onCategoryChange() {
+            const category = categorySelect.value;
+            populateProducts(category);
+            if (productSelect.options.length > 0) {
+                productSelect.selectedIndex = 0;
+                updateDisplay();
+            } else {
+                basePriceSpan.textContent = formatRupiah(0);
+                adminFeeSpan.textContent = formatRupiah(FLAT_ADMIN);
+                totalPriceSpan.textContent = formatRupiah(FLAT_ADMIN);
+            }
+        }
+
+        function orderViaWA() {
+            const category = categorySelect.value;
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            if (!selectedOption || productSelect.options.length === 0) {
+                alert('Silakan pilih produk terlebih dahulu.');
+                return;
+            }
+            const productName = selectedOption.dataset.name;
+            const basePrice = parseInt(selectedOption.dataset.price, 10);
+            const total = basePrice + FLAT_ADMIN;
+            const userData = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}');
+            const nama = userData.nama || 'Customer';
+            const nomor = userData.nomor || '';
+            const message = `Halo YANZ STORE, saya *${nama}* (${nomor}) ingin pesan:%0A%0A📌 *Kategori*: ${category}%0A📦 *Produk*: ${productName}%0A💰 *Harga dasar*: ${formatRupiah(basePrice)}%0A🧾 *Admin flat*: ${formatRupiah(FLAT_ADMIN)}%0A💵 *Total bayar*: ${formatRupiah(total)}%0A%0A𝗦𝗘𝗥𝗧𝗔𝗞𝗔𝗡 𝗕𝗨𝗞𝗧𝗜 𝗧𝗥𝗔𝗡𝗦𝗔𝗞𝗦𝗜 𝗔𝗚𝗔𝗥 𝗗𝗜 𝗣𝗥𝗢𝗦𝗘𝗦.`;
+            const waUrl = `https://wa.me/${ADMIN_PHONE}?text=${message}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function togglePaymentDetails() {
+            if (paymentDetails.style.display === 'none' || paymentDetails.style.display === '') {
+                paymentDetails.style.display = 'block';
+                qrisImage.style.display = 'block';
+                qrisPlaceholder.style.display = 'none';
+            } else {
+                paymentDetails.style.display = 'none';
+            }
+        }
+
+        function setupCopyButtons() {
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const textToCopy = this.getAttribute('data-copy');
+                    if (!textToCopy) return;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        alert('Nomor berhasil disalin!');
+                    }).catch(() => {
+                        alert('Gagal menyalin, coba manual.');
+                    });
+                });
+            });
+        }
+
+        // ==================== JALANKAN ====================
+        window.addEventListener('load', checkLogin);
+    </script>
+</body>
+</html>
